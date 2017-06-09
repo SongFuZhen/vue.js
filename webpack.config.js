@@ -1,29 +1,28 @@
-var htmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path');
 
 module.exports = {
-  entry: './src/app.js',
-  // entry: ['./src/script/main.js', './src/script/layout.js'],
-  // entry: {
-  //   main: './src/script/main.js',
-  //   layout: './src/script/layout.js',
-  //   a: './src/script/a.js',
-  //   b: './src/script/b.js'
-  // },
+  entry: path.resolve(__dirname, 'app/app.js'),
   output: {
-    // path 使用 绝对路径
-    path: '/Documents/vue.js/dist',
-    filename: 'js/[name]-[chunkhash].bundle.js',
-    // publicPath: 'http://cdn.com/'
+    path: path.resolve(__dirname, 'build'),
+    filename: 'bundle.js'
   },
-  
-  plugins: [
-    new htmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: 'body'
-      // title: 'Webpack is Awesome!'
-      // chunks: ['app']
-      // excludeChunks: ['main', 'a']
-    })
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader',
+      query: {
+        presets: ['es2015', 'react']
+      }
+    },
+    {
+      test: /\.(png|jpg|gif)$/,
+      loader: 'url-loader?limit=8192'// 这里的 limit=8192 表示用 base64 编码 <= ８K 的图像
+    },
+    {
+      test: /\.css$/,
+      loader: 'style-loader!css-loader'
+    }
   ]
+  }
 }
